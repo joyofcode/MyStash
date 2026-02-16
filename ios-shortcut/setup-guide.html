@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stash iOS Shortcut Setup Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .step {
+            background: #f9fafb;
+            border-left: 4px solid #6366f1;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #6366f1;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .step-content {
+            color: #4b5563;
+            margin-left: 44px;
+        }
+
+        .action-box {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+
+        .action-label {
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 8px 0;
+            word-break: break-all;
+        }
+
+        .json-code {
+            background: #1f2937;
+            color: #fff;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .json-key {
+            color: #60a5fa;
+        }
+
+        .json-string {
+            color: #34d399;
+        }
+
+        .json-variable {
+            color: #fbbf24;
+            font-style: italic;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tip {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .tip-icon {
+            color: #3b82f6;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .usage-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .usage-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .usage-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .usage-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .usage-card li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .usage-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 24px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 4px;
+        }
+
+        button:active {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Stash iOS Shortcut Setup</h1>
+            <p>Save articles from Safari to your Stash in one tap</p>
+        </div>
+
+        <div class="content">
+            <!-- Quick Start -->
+            <div class="section">
+                <div class="section-title">🚀 Quick Start</div>
+                <div class="tip">
+                    <span class="tip-icon">💡</span>
+                    <strong>Open this page on your iPhone</strong> to copy-paste the credentials while setting up the shortcut!
+                </div>
+                <ol style="padding-left: 20px; color: #4b5563;">
+                    <li style="margin-bottom: 8px;">Open the <strong>Shortcuts app</strong> on your iPhone</li>
+                    <li style="margin-bottom: 8px;">Tap the <strong>+</strong> button</li>
+                    <li style="margin-bottom: 8px;">Follow the steps below</li>
+                </ol>
+            </div>
+
+            <!-- Action 1 -->
+            <div class="section">
+                <div class="section-title">Action 1: Receive Input</div>
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Search and Add Action
+                    </div>
+                    <div class="step-content">
+                        <p>Tap the search bar and type: <span class="highlight">Receive</span></p>
+                        <p style="margin-top: 8px;">Select: <strong>"Receive [Input Type] input from [Source]"</strong></p>
+
+                        <div class="action-box">
+                            <div class="action-label">Configure:</div>
+                            <p>• Input Type: <span class="highlight">URLs</span> and <span class="highlight">Safari web pages</span></p>
+                            <p>• Source: <span class="highlight">Share Sheet</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action 2 -->
+            <div class="section">
+                <div class="section-title">Action 2: Get URLs</div>
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Extract URL
+                    </div>
+                    <div class="step-content">
+                        <p>Search for: <span class="highlight">Get URLs from</span></p>
+
+                        <div class="action-box">
+                            <div class="action-label">Configure:</div>
+                            <p>• Get URLs from: <span class="highlight">Shortcut Input</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action 3 -->
+            <div class="section">
+                <div class="section-title">Action 3: Get Contents of URL (API Call)</div>
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Save to Stash API
+                    </div>
+                    <div class="step-content">
+                        <p>Search for: <span class="highlight">Get Contents of URL</span></p>
+
+                        <div class="warning">
+                            <strong>⚠️ This is the most complex step!</strong> Take your time and copy-paste carefully.
+                        </div>
+
+                        <div class="action-box">
+                            <div class="action-label">URL:</div>
+                            <div class="code">https://vtkxlivxfepxzqibvuto.supabase.co/rest/v1/saves</div>
+                            <button onclick="copyText('https://vtkxlivxfepxzqibvuto.supabase.co/rest/v1/saves')">Copy URL</button>
+                        </div>
+
+                        <div class="action-box">
+                            <div class="action-label">Method:</div>
+                            <p><span class="highlight">POST</span></p>
+                        </div>
+
+                        <div class="action-box">
+                            <div class="action-label">Headers (Tap "Show More" first):</div>
+                            <p style="margin-bottom: 12px;">Add these 3 headers:</p>
+
+                            <div style="margin-bottom: 16px;">
+                                <strong>Header 1:</strong>
+                                <p>Key: <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">apikey</code></p>
+                                <p style="margin-top: 4px;">Value:</p>
+                                <div class="code">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0a3hsaXZ4ZmVweHpxaWJ2dXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNTUxNzEsImV4cCI6MjA4NjgzMTE3MX0.walPEMVkvEx6otbQIjPjSY_e4vrdrwOaR5O2zp83MS8</div>
+                                <button onclick="copyText('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0a3hsaXZ4ZmVweHpxaWJ2dXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNTUxNzEsImV4cCI6MjA4NjgzMTE3MX0.walPEMVkvEx6otbQIjPjSY_e4vrdrwOaR5O2zp83MS8')">Copy apikey</button>
+                            </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <strong>Header 2:</strong>
+                                <p>Key: <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">Content-Type</code></p>
+                                <p style="margin-top: 4px;">Value: <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">application/json</code></p>
+                            </div>
+
+                            <div>
+                                <strong>Header 3:</strong>
+                                <p>Key: <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">Prefer</code></p>
+                                <p style="margin-top: 4px;">Value: <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">return=minimal</code></p>
+                            </div>
+                        </div>
+
+                        <div class="action-box">
+                            <div class="action-label">Request Body:</div>
+                            <p style="margin-bottom: 8px;">Set to: <span class="highlight">JSON</span></p>
+                            <p style="margin-bottom: 8px;"><strong>Then add this JSON:</strong></p>
+
+                            <div class="json-code">
+{
+  <span class="json-key">"user_id"</span>: <span class="json-string">"80f5ed87-4e00-4936-9287-18b47fbfe1e4"</span>,
+  <span class="json-key">"url"</span>: <span class="json-variable">[Tap here to select "URLs" variable]</span>,
+  <span class="json-key">"title"</span>: <span class="json-string">"Saved from iPhone"</span>,
+  <span class="json-key">"source"</span>: <span class="json-string">"ios-shortcut"</span>
+}
+                            </div>
+
+                            <button onclick="copyText('{&quot;user_id&quot;:&quot;80f5ed87-4e00-4936-9287-18b47fbfe1e4&quot;,&quot;url&quot;:&quot;&quot;,&quot;title&quot;:&quot;Saved from iPhone&quot;,&quot;source&quot;:&quot;ios-shortcut&quot;}')">Copy JSON Template</button>
+
+                            <div class="tip" style="margin-top: 12px;">
+                                <span class="tip-icon">💡</span>
+                                <strong>Important:</strong> For the "url" value, don't type text! Tap where the value goes and select the <strong>"URLs"</strong> variable from the list.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action 4 -->
+            <div class="section">
+                <div class="section-title">Action 4: Show Notification</div>
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Success Message
+                    </div>
+                    <div class="step-content">
+                        <p>Search for: <span class="highlight">Show Notification</span></p>
+
+                        <div class="action-box">
+                            <div class="action-label">Text:</div>
+                            <p><span class="highlight">Saved to Stash! ✓</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enable Share Sheet -->
+            <div class="section">
+                <div class="section-title">✨ Enable in Share Sheet</div>
+                <div class="step">
+                    <div class="step-title">Final Configuration</div>
+                    <div class="step-content">
+                        <ol style="padding-left: 20px; color: #4b5563;">
+                            <li style="margin-bottom: 12px;">Tap the shortcut name at the top</li>
+                            <li style="margin-bottom: 12px;">Rename it to: <span class="highlight">Save to Stash</span></li>
+                            <li style="margin-bottom: 12px;">Tap the <strong>(i)</strong> info icon</li>
+                            <li style="margin-bottom: 12px;">Toggle ON: <span class="highlight">Show in Share Sheet</span></li>
+                            <li style="margin-bottom: 12px;">Under "Share Sheet Types", enable:
+                                <ul style="margin-top: 8px; padding-left: 20px;">
+                                    <li>URLs</li>
+                                    <li>Safari web pages</li>
+                                </ul>
+                            </li>
+                            <li>Tap <strong>Done</strong></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage -->
+            <div class="section">
+                <div class="section-title">🎉 How to Use</div>
+                <div class="usage-grid">
+                    <div class="usage-card">
+                        <h3>📱 Install Web App</h3>
+                        <ul>
+                            <li>Open Safari</li>
+                            <li>Go to my-stash-rust.vercel.app</li>
+                            <li>Tap Share → Add to Home Screen</li>
+                            <li>Access your saves like a native app</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3>💾 Save from Safari</h3>
+                        <ul>
+                            <li>Open any article in Safari</li>
+                            <li>Tap the Share button</li>
+                            <li>Select "Save to Stash"</li>
+                            <li>Done! Article saved instantly</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Stash</strong> - Your personal read-it-later app</p>
+            <p style="margin-top: 8px;">All your data stored in your own Supabase database 🔒</p>
+        </div>
+    </div>
+
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Create a temporary success message
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.style.background = '#10b981';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#6366f1';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>
