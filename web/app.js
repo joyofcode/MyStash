@@ -409,6 +409,7 @@ class StashApp {
     let query = this.supabase
       .from('saves')
       .select('*')
+      .eq('user_id', this.user.id)
       .order(column, { ascending: direction === 'asc' });
 
     // Apply view filters
