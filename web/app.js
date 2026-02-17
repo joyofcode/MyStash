@@ -434,14 +434,21 @@ class StashApp {
 
     if (error) {
       console.error('Error loading saves:', error);
+      console.error('Error details:', JSON.stringify(error));
       return;
     }
+
+    console.log('Loaded saves:', data?.length || 0, 'articles');
+    console.log('User ID:', this.user?.id);
+    console.log('Current view:', this.currentView);
 
     this.saves = data || [];
 
     if (this.saves.length === 0) {
+      console.log('No saves found - showing empty state');
       empty.classList.remove('hidden');
     } else {
+      console.log('Rendering', this.saves.length, 'saves');
       empty.classList.add('hidden');
       // Use special rendering for weekly view
       if (this.currentView === 'weekly') {
