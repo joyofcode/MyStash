@@ -750,7 +750,7 @@ class StashApp {
     this.renderSaves();
   }
 
-  openReadingPane(save) {
+  async openReadingPane(save) {
     this.currentSave = save;
     const pane = document.getElementById('reading-pane');
 
