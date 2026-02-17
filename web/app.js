@@ -998,7 +998,13 @@ class StashApp {
   }
 
   async openTagModal() {
-    if (!this.currentSave) return;
+    console.log('Opening tag modal...');
+    if (!this.currentSave) {
+      console.log('No current save');
+      return;
+    }
+
+    console.log('Current save:', this.currentSave.id);
 
     // Load current save's tags
     const { data: saveTags } = await this.supabase
@@ -1006,14 +1012,18 @@ class StashApp {
       .select('tag_id, tags(*)')
       .eq('save_id', this.currentSave.id);
 
+    console.log('Current save tags:', saveTags);
     this.selectedTagIds = new Set((saveTags || []).map(st => st.tag_id));
 
     // Load all tags
     await this.loadAllTagsForModal();
 
+    console.log('All tags loaded:', this.allTags?.length);
+
     // Show modal
     const modal = document.getElementById('tag-modal');
     modal.classList.remove('hidden');
+    console.log('Tag modal opened');
     document.getElementById('tag-search-input').focus();
   }
 
@@ -1180,14 +1190,25 @@ class StashApp {
   }
 
   async loadArticleTags() {
-    if (!this.currentSave) return;
+    if (!this.currentSave) {
+      console.log('No current save, skipping tag load');
+      return;
+    }
 
-    const { data: saveTags } = await this.supabase
+    console.log('Loading tags for article:', this.currentSave.id);
+
+    const { data: saveTags, error } = await this.supabase
       .from('save_tags')
       .select('tags(*)')
       .eq('save_id', this.currentSave.id);
 
+    if (error) {
+      console.error('Error loading article tags:', error);
+      return;
+    }
+
     const tags = (saveTags || []).map(st => st.tags);
+    console.log('Loaded tags:', tags.length, tags);
     this.renderArticleTags(tags);
   }
 
