@@ -5,7 +5,7 @@ import { Readability } from "https://esm.sh/@mozilla/readability@0.5.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info, x-requested-with",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 

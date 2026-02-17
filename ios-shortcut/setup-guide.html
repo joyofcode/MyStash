@@ -292,29 +292,10 @@
 
             <!-- Action 2 -->
             <div class="section">
-                <div class="section-title">Action 2: Get URLs</div>
+                <div class="section-title">Action 2: Get Contents of URL (API Call)</div>
                 <div class="step">
                     <div class="step-title">
                         <span class="step-number">2</span>
-                        Extract URL
-                    </div>
-                    <div class="step-content">
-                        <p>Search for: <span class="highlight">Get URLs from</span></p>
-
-                        <div class="action-box">
-                            <div class="action-label">Configure:</div>
-                            <p>• Get URLs from: <span class="highlight">Shortcut Input</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action 3 -->
-            <div class="section">
-                <div class="section-title">Action 3: Get Contents of URL (API Call)</div>
-                <div class="step">
-                    <div class="step-title">
-                        <span class="step-number">3</span>
                         Save to Stash API
                     </div>
                     <div class="step-content">
@@ -362,7 +343,7 @@
                             <div class="json-code">
 {
   <span class="json-key">"user_id"</span>: <span class="json-string">"80f5ed87-4e00-4936-9287-18b47fbfe1e4"</span>,
-  <span class="json-key">"url"</span>: <span class="json-variable">[Tap here to select "URLs" variable]</span>,
+  <span class="json-key">"url"</span>: <span class="json-variable">[Tap here to select "Shortcut Input" variable]</span>,
   <span class="json-key">"source"</span>: <span class="json-string">"ios-shortcut"</span>
 }
                             </div>
@@ -370,25 +351,25 @@
                             <button onclick="copyText('{&quot;user_id&quot;:&quot;80f5ed87-4e00-4936-9287-18b47fbfe1e4&quot;,&quot;url&quot;:&quot;&quot;,&quot;source&quot;:&quot;ios-shortcut&quot;}')">Copy JSON Template</button>
 
                             <div class="tip" style="margin-top: 12px;">
-                                <span class="tip-icon">✨</span>
-                                <strong>Automatic extraction:</strong> The function automatically fetches and extracts the article title, excerpt, content, images, and author from the URL!
+                                <span class="tip-icon">💡</span>
+                                <strong>Important:</strong> For the "url" value, don't type text! Tap where the value goes and select the <strong>"Shortcut Input"</strong> variable from the list (it should appear as a blue/purple pill).
                             </div>
 
                             <div class="tip" style="margin-top: 12px;">
-                                <span class="tip-icon">💡</span>
-                                <strong>Important:</strong> For the "url" value, don't type text! Tap where the value goes and select the <strong>"URLs"</strong> variable from the list.
+                                <span class="tip-icon">✨</span>
+                                <strong>Automatic extraction:</strong> The function automatically fetches and extracts the article title, excerpt, content, images, and author from the URL!
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Action 4 -->
+            <!-- Action 3 -->
             <div class="section">
-                <div class="section-title">Action 4: Show Notification</div>
+                <div class="section-title">Action 3: Show Notification</div>
                 <div class="step">
                     <div class="step-title">
-                        <span class="step-number">4</span>
+                        <span class="step-number">3</span>
                         Success Message
                     </div>
                     <div class="step-content">
