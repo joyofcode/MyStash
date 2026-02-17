@@ -251,6 +251,31 @@ def main():
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
+    # Check for article-id mode (process specific article)
+    if len(sys.argv) > 2 and sys.argv[1] == "--article-id":
+        article_id = sys.argv[2]
+        log(f"Processing article: {article_id}")
+
+        # Fetch specific article
+        url = f"{SUPABASE_URL}/rest/v1/saves?id=eq.{article_id}&user_id=eq.{USER_ID}&select=*"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Content-Type": "application/json"
+        }
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            saves = response.json()
+            if saves and len(saves) > 0:
+                success = process_save(saves[0])
+                sys.exit(0 if success else 1)
+            else:
+                log(f"Article not found: {article_id}")
+                sys.exit(1)
+        else:
+            log(f"Error fetching article: {response.text}")
+            sys.exit(1)
+
     # Check for single-run mode
     if len(sys.argv) > 1 and sys.argv[1] == "--once":
         log("Running once...")

@@ -120,6 +120,24 @@ class StashApp {
       this.deleteSave();
     });
 
+    document.getElementById('generate-audio-btn').addEventListener('click', () => {
+      const container = document.getElementById('generate-audio-btn-container');
+      const articleId = container.dataset.articleId;
+      if (articleId) {
+        const command = `python tts.py --article-id ${articleId}`;
+        navigator.clipboard.writeText(command).then(() => {
+          const btn = document.getElementById('generate-audio-btn');
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Command Copied!';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+          }, 2000);
+        }).catch(err => {
+          alert('Failed to copy command. Run: python tts.py --article-id ' + articleId);
+        });
+      }
+    });
+
     document.getElementById('add-tag-btn').addEventListener('click', () => {
       this.addTagToSave();
     });
@@ -706,21 +724,22 @@ class StashApp {
 
     // Handle audio player visibility
     const audioPlayer = document.getElementById('audio-player');
-    const audioGenerating = document.getElementById('audio-generating');
+    const generateAudioContainer = document.getElementById('generate-audio-btn-container');
 
     if (save.audio_url) {
       // Audio is ready - show player
       audioPlayer.classList.remove('hidden');
-      audioGenerating.classList.add('hidden');
+      generateAudioContainer.classList.add('hidden');
       this.initAudio(save.audio_url);
     } else if (save.content && save.content.length > 100 && !save.highlight) {
-      // Content exists but no audio yet - show generating indicator
+      // Content exists but no audio yet - show generate button
       audioPlayer.classList.add('hidden');
-      audioGenerating.classList.remove('hidden');
+      generateAudioContainer.classList.remove('hidden');
+      generateAudioContainer.dataset.articleId = save.id;
     } else {
       // No audio applicable (highlights, short content)
       audioPlayer.classList.add('hidden');
-      audioGenerating.classList.add('hidden');
+      generateAudioContainer.classList.add('hidden');
     }
 
     if (save.highlight) {

@@ -642,6 +642,30 @@ input, select {
   margin-bottom: 16px;
 }
 
+/* Generate Audio Button */
+.generate-audio-container {
+  padding: 16px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+[data-theme="dark"] .generate-audio-container {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+}
+
+.generate-audio-container .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate-audio-help {
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* Audio Player */
 .audio-player {
   display: flex;
