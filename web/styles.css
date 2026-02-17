@@ -644,7 +644,7 @@ input, select {
 
 /* Generate Audio Button */
 .generate-audio-container {
-  padding: 16px;
+  padding: 12px;
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border-radius: var(--radius-lg);
   margin-bottom: 20px;
@@ -659,11 +659,6 @@ input, select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.generate-audio-help {
-  margin: 0;
-  line-height: 1.5;
 }
 
 /* Audio Player */
