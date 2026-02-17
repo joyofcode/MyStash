@@ -203,6 +203,38 @@ class StashApp {
       }
     });
 
+    // Tag Modal
+    document.getElementById('tag-modal-close').addEventListener('click', () => {
+      this.closeTagModal();
+    });
+
+    document.getElementById('tag-cancel-btn').addEventListener('click', () => {
+      this.closeTagModal();
+    });
+
+    document.getElementById('tag-apply-btn').addEventListener('click', () => {
+      this.applySelectedTags();
+    });
+
+    const tagSearchInput = document.getElementById('tag-search-input');
+    tagSearchInput.addEventListener('input', () => {
+      this.renderTagModal();
+    });
+
+    tagSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const searchTerm = tagSearchInput.value.trim();
+        if (searchTerm) {
+          this.createAndAddTag(searchTerm);
+        }
+      }
+    });
+
+    // Close tag modal when clicking overlay
+    document.querySelector('#tag-modal .modal-overlay').addEventListener('click', () => {
+      this.closeTagModal();
+    });
+
     // Kindle Import
     document.getElementById('kindle-import-btn').addEventListener('click', () => {
       this.showKindleImportModal();
@@ -760,6 +792,9 @@ class StashApp {
     document.getElementById('archive-btn').classList.toggle('active', save.is_archived);
     document.getElementById('favorite-btn').classList.toggle('active', save.is_favorite);
 
+    // Load tags for this article
+    await this.loadArticleTags();
+
     pane.classList.remove('hidden');
     // Add open class for mobile slide-in animation
     requestAnimationFrame(() => {
@@ -941,13 +976,140 @@ class StashApp {
     this.loadSaves();
   }
 
-  async addTagToSave() {
+  // Tag colors palette
+  tagColors = ['blue', 'green', 'yellow', 'red', 'purple', 'pink', 'indigo', 'teal', 'orange', 'cyan', 'gray', 'lime'];
+  selectedTagIds = new Set();
+
+  getTagColor(tagName) {
+    // Consistent color based on tag name
+    let hash = 0;
+    for (let i = 0; i < tagName.length; i++) {
+      hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return this.tagColors[Math.abs(hash) % this.tagColors.length];
+  }
+
+  async openTagModal() {
     if (!this.currentSave) return;
 
-    const tagName = prompt('Enter tag name:');
+    // Load current save's tags
+    const { data: saveTags } = await this.supabase
+      .from('save_tags')
+      .select('tag_id, tags(*)')
+      .eq('save_id', this.currentSave.id);
+
+    this.selectedTagIds = new Set((saveTags || []).map(st => st.tag_id));
+
+    // Load all tags
+    await this.loadAllTagsForModal();
+
+    // Show modal
+    const modal = document.getElementById('tag-modal');
+    modal.classList.remove('hidden');
+    document.getElementById('tag-search-input').focus();
+  }
+
+  async loadAllTagsForModal() {
+    // Load all tags with save counts
+    const { data: tags } = await this.supabase
+      .from('tags')
+      .select('*, save_tags(count)')
+      .order('name');
+
+    this.allTags = (tags || []).map(tag => ({
+      ...tag,
+      count: tag.save_tags[0]?.count || 0
+    }));
+
+    // Get popular tags (top 6 by usage)
+    this.popularTags = [...this.allTags]
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 6);
+
+    this.renderTagModal();
+  }
+
+  renderTagModal() {
+    const searchTerm = document.getElementById('tag-search-input').value.toLowerCase();
+
+    // Filter tags based on search
+    const filteredTags = searchTerm
+      ? this.allTags.filter(tag => tag.name.toLowerCase().includes(searchTerm))
+      : this.allTags;
+
+    // Popular tags
+    const popularContainer = document.getElementById('tag-popular-list');
+    const popularSection = document.getElementById('tag-popular-section');
+    if (this.popularTags.length > 0 && !searchTerm) {
+      popularSection.classList.remove('hidden');
+      popularContainer.innerHTML = this.popularTags.map(tag => this.renderTagButton(tag)).join('');
+    } else {
+      popularSection.classList.add('hidden');
+    }
+
+    // All tags
+    const allContainer = document.getElementById('tag-all-list');
+    const allSection = document.getElementById('tag-all-section');
+    const tagCount = document.getElementById('tag-count');
+
+    if (filteredTags.length > 0) {
+      allSection.classList.remove('hidden');
+      tagCount.textContent = `(${filteredTags.length})`;
+      allContainer.innerHTML = filteredTags.map(tag => this.renderTagButton(tag)).join('');
+    } else {
+      allSection.classList.add('hidden');
+    }
+
+    // Show create hint or no results
+    const createHint = document.getElementById('tag-create-hint');
+    const noResults = document.getElementById('tag-no-results');
+    const createName = document.getElementById('tag-create-name');
+
+    if (searchTerm) {
+      const exactMatch = this.allTags.find(tag => tag.name.toLowerCase() === searchTerm);
+      if (!exactMatch) {
+        noResults.classList.remove('hidden');
+        createName.textContent = searchTerm;
+        createHint.classList.add('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        createHint.classList.add('hidden');
+      }
+    } else {
+      noResults.classList.add('hidden');
+      createHint.classList.remove('hidden');
+    }
+
+    // Add click handlers
+    document.querySelectorAll('.tag-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tagId = btn.dataset.tagId;
+        if (this.selectedTagIds.has(tagId)) {
+          this.selectedTagIds.delete(tagId);
+          btn.classList.remove('selected');
+        } else {
+          this.selectedTagIds.add(tagId);
+          btn.classList.add('selected');
+        }
+      });
+    });
+  }
+
+  renderTagButton(tag) {
+    const color = this.getTagColor(tag.name);
+    const selected = this.selectedTagIds.has(tag.id) ? 'selected' : '';
+    const count = tag.count > 0 ? `<span class="tag-button-count">(${tag.count})</span>` : '';
+    return `
+      <button class="tag-button tag-color-${color} ${selected}" data-tag-id="${tag.id}">
+        ${this.escapeHtml(tag.name)} ${count}
+      </button>
+    `;
+  }
+
+  async createAndAddTag(tagName) {
     if (!tagName?.trim()) return;
 
-    // Get or create tag
+    // Check if tag exists
     let { data: existingTag } = await this.supabase
       .from('tags')
       .select('*')
@@ -964,12 +1126,103 @@ class StashApp {
     }
 
     if (existingTag) {
+      this.selectedTagIds.add(existingTag.id);
+      await this.loadAllTagsForModal();
+      document.getElementById('tag-search-input').value = '';
+    }
+  }
+
+  async applySelectedTags() {
+    if (!this.currentSave) return;
+
+    // Get current save tags
+    const { data: currentSaveTags } = await this.supabase
+      .from('save_tags')
+      .select('tag_id')
+      .eq('save_id', this.currentSave.id);
+
+    const currentTagIds = new Set((currentSaveTags || []).map(st => st.tag_id));
+
+    // Tags to add
+    const toAdd = [...this.selectedTagIds].filter(id => !currentTagIds.has(id));
+
+    // Tags to remove
+    const toRemove = [...currentTagIds].filter(id => !this.selectedTagIds.has(id));
+
+    // Add new tags
+    if (toAdd.length > 0) {
       await this.supabase
         .from('save_tags')
-        .insert({ save_id: this.currentSave.id, tag_id: existingTag.id });
-
-      this.loadTags();
+        .insert(toAdd.map(tag_id => ({ save_id: this.currentSave.id, tag_id })));
     }
+
+    // Remove unselected tags
+    if (toRemove.length > 0) {
+      await this.supabase
+        .from('save_tags')
+        .delete()
+        .eq('save_id', this.currentSave.id)
+        .in('tag_id', toRemove);
+    }
+
+    // Close modal and refresh
+    this.closeTagModal();
+    await this.loadTags();
+    await this.loadArticleTags();
+  }
+
+  async loadArticleTags() {
+    if (!this.currentSave) return;
+
+    const { data: saveTags } = await this.supabase
+      .from('save_tags')
+      .select('tags(*)')
+      .eq('save_id', this.currentSave.id);
+
+    const tags = (saveTags || []).map(st => st.tags);
+    this.renderArticleTags(tags);
+  }
+
+  renderArticleTags(tags) {
+    const container = document.getElementById('reading-tags-list');
+    container.innerHTML = tags.map(tag => {
+      const color = this.getTagColor(tag.name);
+      return `
+        <div class="tag-pill tag-color-${color}" data-tag-id="${tag.id}">
+          ${this.escapeHtml(tag.name)}
+          <button class="tag-pill-remove" onclick="app.removeTagFromArticle('${tag.id}', event)">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async removeTagFromArticle(tagId, event) {
+    event?.stopPropagation();
+    if (!this.currentSave) return;
+
+    await this.supabase
+      .from('save_tags')
+      .delete()
+      .eq('save_id', this.currentSave.id)
+      .eq('tag_id', tagId);
+
+    await this.loadTags();
+    await this.loadArticleTags();
+  }
+
+  closeTagModal() {
+    document.getElementById('tag-modal').classList.add('hidden');
+    document.getElementById('tag-search-input').value = '';
+  }
+
+  // Legacy function for compatibility
+  async addTagToSave() {
+    await this.openTagModal();
   }
 
   async addFolder() {

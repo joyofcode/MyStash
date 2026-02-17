@@ -2041,3 +2041,273 @@ input, select {
     font-size: 24px;
   }
 }
+
+/* ============================================
+   TAG SYSTEM STYLES
+   ============================================ */
+
+/* Reading Tags Display */
+.reading-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+}
+
+.reading-tags-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.reading-tags-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tag Pill */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: default;
+  transition: all 0.2s;
+  border: 1px solid currentColor;
+  position: relative;
+}
+
+.tag-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tag-pill-remove {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.tag-pill:hover .tag-pill-remove {
+  display: flex;
+}
+
+.tag-pill-remove:hover {
+  background: rgba(0,0,0,0.2);
+}
+
+.tag-pill-remove svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* Add Tag Button */
+.add-tag-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-tag-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* Tag Modal */
+.tag-modal-content {
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tag-modal-content .modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Tag Search */
+.tag-search-container {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.tag-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.tag-search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+
+.tag-search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Tag Sections */
+.tag-section {
+  margin-bottom: 24px;
+}
+
+.tag-section:last-child {
+  margin-bottom: 0;
+}
+
+.tag-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tag-section-title span {
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+/* Tag Grid */
+.tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tag Button (in modal) */
+.tag-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid currentColor;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+[data-theme="dark"] .tag-button {
+  background: var(--bg-primary);
+}
+
+.tag-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tag-button.selected {
+  background: currentColor;
+  color: white !important;
+}
+
+.tag-button.selected::after {
+  content: '✓';
+  margin-left: 4px;
+}
+
+.tag-button-count {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: normal;
+}
+
+/* Tag Hints */
+.tag-create-hint,
+.tag-no-results {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.tag-create-hint kbd,
+.tag-no-results kbd {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  margin: 0 4px;
+}
+
+#tag-create-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Tag Colors */
+.tag-color-blue { color: #3b82f6; }
+.tag-color-green { color: #10b981; }
+.tag-color-yellow { color: #f59e0b; }
+.tag-color-red { color: #ef4444; }
+.tag-color-purple { color: #8b5cf6; }
+.tag-color-pink { color: #ec4899; }
+.tag-color-indigo { color: #6366f1; }
+.tag-color-teal { color: #14b8a6; }
+.tag-color-orange { color: #f97316; }
+.tag-color-cyan { color: #06b6d4; }
+.tag-color-gray { color: #6b7280; }
+.tag-color-lime { color: #84cc16; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tag-modal-content {
+    max-height: 90vh;
+  }
+
+  .reading-tags {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tag-pill,
+  .tag-button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
